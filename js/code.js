@@ -4,10 +4,10 @@ $(".progress-bar").css("width", "0%");
 
 
 function onCourse1() {
-    console.log("Course 1 Loaded")
-    var wrongAnswersArray = ["Yes", "No", "Maybe"]
-    var question = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers:wrongAnswersArray}
-    
+    $('#nextButton').hide();
+    console.log("Course 1 Loaded");
+    var wrongAnswersArray = ["Yes", "No", "Maybe"];
+    var question = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers:wrongAnswersArray};
 
     //Generating Question Page
 
@@ -30,6 +30,7 @@ function onCourse1() {
 
     //Logging the array and the answer position for debugging
 
+
     console.log(questionAnswerPosition)
     console.log(possibleAnswerPositions)
     console.log()
@@ -40,42 +41,44 @@ function onCourse1() {
     $("#userAnswer" + possibleAnswerPositions[0]).html(question.wrongAnswers[0]);
     $("#userAnswer" + possibleAnswerPositions[1]).html(question.wrongAnswers[1]);
     $("#userAnswer" + possibleAnswerPositions[2]).html(question.wrongAnswers[2]);
-
     
 }
 
-function userAnswer1Clicked() {
-    if (questionAnswerPosition == 1) {
+// The submit button
+
+function submitAnswer() {
+    if (userAnswer == questionAnswerPosition) {
         $(".questionAnswerCheck").text("Correct");
+        $("#submitButton").hide();
+        $("#nextButton").show();
     }
     else {
         $(".questionAnswerCheck").text("Wrong");
     }
+}
+
+// The answer buttons
+
+function userAnswer1Clicked() {
+    userAnswer = 1;
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $("#userAnswer1").css("background-color", "#2349A0");
 }
 
 function userAnswer2Clicked() {
-    if (questionAnswerPosition == 2) {
-        $(".questionAnswerCheck").text("Correct");
-    }
-    else {
-        $(".questionAnswerCheck").text("Wrong");
-    }
+    userAnswer = 2;
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $("#userAnswer2").css("background-color", "#2349A0");
 }
 
 function userAnswer3Clicked() {
-    if (questionAnswerPosition == 3) {
-        $(".questionAnswerCheck").text("Correct");
-    }
-    else {
-        $(".questionAnswerCheck").text("Wrong");
-    }
+    userAnswer = 3;
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $("#userAnswer3").css("background-color", "#2349A0");
 }
 
 function userAnswer4Clicked() {
-    if (questionAnswerPosition == 4) {
-        $(".questionAnswerCheck").text("Correct");
-    }
-    else {
-        $(".questionAnswerCheck").text("Wrong");
-    }
+    userAnswer = 4;
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $("#userAnswer4").css("background-color", "#2349A0");
 }

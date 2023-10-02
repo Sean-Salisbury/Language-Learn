@@ -48,6 +48,13 @@ a {
     margin-bottom: 10%;
 }
 
+.questionContainer .btn-primary {
+    font-size: xx-large;
+    width:50%;
+    height:75px;
+    margin-bottom: 1%;
+}
+
 .dropdown-menu .btn-primary {
     width:50%;
     margin-bottom: 10%;
@@ -62,6 +69,16 @@ a {
     line-height: 100px;
     text-align: center;
     font-size: 50px;
+}
+
+.btn-success {
+    width: 25%;
+    height:75px;
+}
+
+.btn-info {
+    width: 12%;
+    height: 75px;
 }
 
 .dropdown-center {
