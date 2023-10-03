@@ -19,7 +19,7 @@
 
     </head>
 
-    <body onload="onCourse1();">
+    <body onload="questionType(1, 1);">
         <header>
             <nav id="header-nav" class="navbar navbar-default">
                 <div class="container-fluid navbar-container">
@@ -45,25 +45,33 @@
             <div class="row">
                 <div class="col-lg-12 questionContainer text-center">
                     <h2 class="text-center question"></h2>
-                    <p class="questionSubject">hola</p>
-                    <button class="btn btn-primary userAnswerButton" id="userAnswer1" onclick="userAnswer1Clicked()"></button>
-                    <button class="btn btn-primary userAnswerButton" id="userAnswer2" onclick="userAnswer2Clicked()"></button>
-                    <button class="btn btn-primary userAnswerButton" id="userAnswer3" onclick="userAnswer3Clicked()"></button>
-                    <button class="btn btn-primary userAnswerButton" id="userAnswer4" onclick="userAnswer4Clicked()"></button>
-
-                    
-
-                    
                 </div>
+                <div class="col-lg-12 questionSubjectContainer text-center">
+                    <h3 class="questionSubject"></h3>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 questionUserAnswerContainer text-center">
+
+                            <button class="btn btn-primary userAnswerButton" id="userAnswer1" onclick="userAnswer1Clicked()"></button>
+                            <button class="btn btn-primary userAnswerButton" id="userAnswer2" onclick="userAnswer2Clicked()"></button>
+                            <button class="btn btn-primary userAnswerButton" id="userAnswer3" onclick="userAnswer3Clicked()"></button>
+                            <button class="btn btn-primary userAnswerButton" id="userAnswer4" onclick="userAnswer4Clicked()"></button>
+                    </div>
+                    
+
+                    
+                
 
                 <div class="col-lg-12 questionContainer text-center">
                     <button class="btn btn-success float-none" id="submitButton" onclick="submitAnswer()">Submit</button>
                     <button class="btn btn-info float-none" id="nextButton" onclick="nextQuestion()">Next</button>
                 </div>
 
-                <div class="col-lg-12 questionContainer text-center">
-                    <p class="questionAnswerCheck"></p>
-                </div>
+                <footer class="col-lg-12 footerContainer text-center">
+                    <h3 class="questionAnswerCheck"></h3>
+                </footer>
                     
             </div>
         </div>

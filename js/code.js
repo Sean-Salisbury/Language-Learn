@@ -1,13 +1,69 @@
 $(".progress-bar").attr("aria-valuenow", "0");
 $(".progress-bar").css("width", "0%");
 
+var courseNumberGlobal = null;
+var questionNumberGlobal = null;
+var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers: ["Yes", "No", "Maybe"]};
+var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"bicicleta", wrongAnswers: ["Dinero", "Leche", "Manzana"]};
+var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", wrongAnswers: ["Leche", "Manzana", "Dinero"]};
+var course1 = [question1, question2, question3];
+var courses = [course1];
 
+/**********************************************************************************************************************************************************
+SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS 
+***********************************************************************************************************************************************************/
 
-function onCourse1() {
+function selectTheCorrectMeaning(question) {
+    $('.questionAnswerCheck').text("");
+    $('#submitButton').show();
     $('#nextButton').hide();
-    console.log("Course 1 Loaded");
-    var wrongAnswersArray = ["Yes", "No", "Maybe"];
-    var question = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers:wrongAnswersArray};
+    console.log("selectTheCorrectMeaning Loaded");
+    
+
+    //Generating Question Page
+
+    $(".question").text(question.question);
+    $(".questionSubject").text(question.questionSubject);
+
+    let possibleAnswerPositions = [1, 2, 3, 4]
+
+    //Shuffling the Array
+
+    for (let i = possibleAnswerPositions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap elements
+        [possibleAnswerPositions[i], possibleAnswerPositions[j]] = [possibleAnswerPositions[j], possibleAnswerPositions[i]]; 
+    }
+
+    //Using the pop method to take out the last number in the array which will be the index of the answer button
+
+    questionAnswerPosition = possibleAnswerPositions.pop();
+
+    //Logging the array and the answer position for debugging
+
+
+    console.log(questionAnswerPosition)
+    console.log(possibleAnswerPositions)
+    console.log()
+
+    
+
+    $("#userAnswer" + questionAnswerPosition).html(question.correctAnswer);
+    $("#userAnswer" + possibleAnswerPositions[0]).html(question.wrongAnswers[0]);
+    $("#userAnswer" + possibleAnswerPositions[1]).html(question.wrongAnswers[1]);
+    $("#userAnswer" + possibleAnswerPositions[2]).html(question.wrongAnswers[2]);
+    
+}
+/**********************************************************************************************************************************************************
+FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS 
+***********************************************************************************************************************************************************/
+
+function fillInTheBlank(question) {
+    $('.questionAnswerCheck').text("");
+    $('#submitButton').show();
+    $('#nextButton').hide();
+    console.log("fillInTheBlank Loaded");
+    
 
     //Generating Question Page
 
@@ -44,6 +100,24 @@ function onCourse1() {
     
 }
 
+//Determining what the question type is
+
+function questionType(courseNumber, questionNumber) {
+    courseNumberGlobal = courseNumber
+    questionNumberGlobal = questionNumber + 1;
+    courseNumber = courseNumber - 1;
+    questionNumber = questionNumber - 1;
+    let currentCourse = courses[courseNumber];
+    let currentQuestion = currentCourse[questionNumber];
+
+    if (currentQuestion.question == "Select the Correct Meaning") {
+        selectTheCorrectMeaning(currentQuestion);
+    }
+    else if (currentQuestion.question == "Fill in the blank"){
+        fillInTheBlank(currentQuestion);
+    }
+}
+
 // The submit button
 
 function submitAnswer() {
@@ -55,6 +129,12 @@ function submitAnswer() {
     else {
         $(".questionAnswerCheck").text("Wrong");
     }
+}
+
+// The next button
+
+function nextQuestion() {
+    questionType(courseNumberGlobal, questionNumberGlobal);
 }
 
 // The answer buttons
@@ -82,3 +162,4 @@ function userAnswer4Clicked() {
     $(".userAnswerButton").css("background-color", "#0d6efd");
     $("#userAnswer4").css("background-color", "#2349A0");
 }
+

@@ -48,11 +48,30 @@ a {
     margin-bottom: 10%;
 }
 
-.questionContainer .btn-primary {
+.questionUserAnswerContainer .btn-primary {
     font-size: xx-large;
-    width:50%;
+    width:auto;
     height:75px;
     margin-bottom: 1%;
+}
+
+.questionUserAnswerContainer {
+    height:100px;
+}
+
+.questionContainer  {
+    height:100px;
+}
+
+.footerContainer {
+    height: 100px;
+    background-color: lightblue;
+    position:absolute;
+    bottom:0;
+}
+
+.questionAnswerCheck {
+    line-height: 100px;
 }
 
 .dropdown-menu .btn-primary {
