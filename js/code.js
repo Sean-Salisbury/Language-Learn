@@ -1,13 +1,18 @@
-$(".progress-bar").attr("aria-valuenow", "0");
-$(".progress-bar").css("width", "0%");
-
-var courseNumberGlobal = null;
-var questionNumberGlobal = null;
+var progressBarAmount = 0;
+var questionNumberGlobal = 1;
 var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers: ["Yes", "No", "Maybe"]};
 var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"bicicleta", wrongAnswers: ["Dinero", "Leche", "Manzana"]};
 var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", wrongAnswers: ["Leche", "Manzana", "Dinero"]};
 var course1 = [question1, question2, question3];
-var courses = [course1];
+var courses = [course1]; 
+
+window.addEventListener('load', hasLoadedPage()) 
+
+function hasLoadedPage() {
+    $(".progress-bar").attr("aria-valuenow", "0");
+    $(".progress-bar").css("width", "0%");
+    questionType(1)
+}
 
 /**********************************************************************************************************************************************************
 SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS 
@@ -102,14 +107,12 @@ function fillInTheBlank(question) {
 
 //Determining what the question type is
 
-function questionType(courseNumber, questionNumber) {
-    courseNumberGlobal = courseNumber
-    questionNumberGlobal = questionNumber + 1;
-    courseNumber = courseNumber - 1;
-    questionNumber = questionNumber - 1;
+function questionType() {
+    courseNumber = localStorage.getItem('courseNumber') -1;
+    questionNumber = questionNumberGlobal - 1;
     let currentCourse = courses[courseNumber];
     let currentQuestion = currentCourse[questionNumber];
-
+    questionNumberGlobal++;
     if (currentQuestion.question == "Select the Correct Meaning") {
         selectTheCorrectMeaning(currentQuestion);
     }
@@ -125,16 +128,20 @@ function submitAnswer() {
         $(".questionAnswerCheck").text("Correct");
         $("#submitButton").hide();
         $("#nextButton").show();
+        progressBarAmount = progressBarAmount + 10;
+        $(".progress-bar").attr("aria-valuenow", progressBarAmount);
+        $(".progress-bar").css("width", progressBarAmount + "%");
     }
     else {
         $(".questionAnswerCheck").text("Wrong");
     }
 }
 
-// The next button
+// The next course button
 
-function nextQuestion() {
-    questionType(courseNumberGlobal, questionNumberGlobal);
+function nextCourse(courseNumber) {
+    localStorage.setItem("courseNumber" ,courseNumber)
+    location.href='courses/course1.html';
 }
 
 // The answer buttons
