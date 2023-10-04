@@ -199,5 +199,5 @@ function userAnswer4Clicked() {
 
 function nextCourse(courseNumber) {
     localStorage.setItem("courseNumber" ,courseNumber)
-    location.href='/html/courses.html';
+    location.href='/Language-Learn/html/courses.html';
 }
