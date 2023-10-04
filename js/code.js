@@ -207,5 +207,5 @@ function tryAgainFunction() {
 };
 
 function backToMenuFunction() {
-    location.href='/html/index.html'
+    location.href='/index.html'
 };
