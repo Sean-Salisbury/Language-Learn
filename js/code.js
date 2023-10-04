@@ -1,5 +1,12 @@
+//STORED FRONTEND
+
 var progressBarAmount = 0;
 var questionNumberGlobal = 1;
+var wrongAnswers = {course1: 0, course2: 0, }
+
+//STORED BACKEND
+
+var leastWrongAnswers = {course1: 100, course2: 100, };
 var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers: ["Yes", "No", "Maybe"]};
 var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"bicicleta", wrongAnswers: ["Dinero", "Leche", "Manzana"]};
 var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", wrongAnswers: ["Leche", "Manzana", "Dinero"]};
@@ -12,6 +19,12 @@ function hasLoadedPage() {
     $(".progress-bar").attr("aria-valuenow", "0");
     $(".progress-bar").css("width", "0%");
     questionType(1)
+
+    //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
+
+    let ItemsInCurrentCourse = courses[localStorage.getItem('courseNumber') -1].length;
+    progressBarAmount = 100 / ItemsInCurrentCourse;
+    console.log(progressBarAmount)
 }
 
 /**********************************************************************************************************************************************************
@@ -22,6 +35,7 @@ function selectTheCorrectMeaning(question) {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
+    $('#popupbox').hide();
     console.log("selectTheCorrectMeaning Loaded");
     
 
@@ -67,6 +81,7 @@ function fillInTheBlank(question) {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
+    $('#popupbox').hide();
     console.log("fillInTheBlank Loaded");
     
 
@@ -128,21 +143,31 @@ function submitAnswer() {
         $(".questionAnswerCheck").text("Correct");
         $("#submitButton").hide();
         $("#nextButton").show();
-        progressBarAmount = progressBarAmount + 10;
         $(".progress-bar").attr("aria-valuenow", progressBarAmount);
         $(".progress-bar").css("width", progressBarAmount + "%");
+        if (progressBarAmount >= 100) {
+            let currentCourse = "course" + localStorage.getItem('courseNumber'); 
+            $("#userAnswer1").hide(); 
+            $("#userAnswer2").hide();
+            $("#userAnswer3").hide(); 
+            $("#userAnswer4").hide();
+            $('#popupbox').show();
+            $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Pressed " 
+            + wrongAnswers[currentCourse] + " Incorrect Answers.");
+        }
+        else {
+            $('#popupbox').hide();
+        }
+
+        progressBarAmount = progressBarAmount + progressBarAmount;
     }
     else {
         $(".questionAnswerCheck").text("Wrong");
+        wrongAnswers.course1 ++; 
     }
 }
 
-// The next course button
 
-function nextCourse(courseNumber) {
-    localStorage.setItem("courseNumber" ,courseNumber)
-    location.href='courses/course1.html';
-}
 
 // The answer buttons
 
@@ -170,3 +195,9 @@ function userAnswer4Clicked() {
     $("#userAnswer4").css("background-color", "#2349A0");
 }
 
+// The next course button
+
+function nextCourse(courseNumber) {
+    localStorage.setItem("courseNumber" ,courseNumber)
+    location.href='courses/course1.html';
+}

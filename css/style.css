@@ -56,7 +56,11 @@ a {
 }
 
 .questionUserAnswerContainer {
-    height:100px;
+    height: 100px;
+}
+
+.nextSubmitButtonContainer {
+    height: 200px;
 }
 
 .questionContainer  {
@@ -113,4 +117,28 @@ a {
     text-align: center;
 }
 
+#popupbox {
+    position:absolute;
+    border:3px solid black;
+    /* Getting it in the centre negative margin equivalent to half it height */
+    height:500px;
+    margin-bottom: -250px;
+    width:500px;
+    margin-left: -250px;
+    border-radius: 4%;
+    background-color: #6891F0;
+    bottom: 50%;
+    left:50%;
+}
 
+#backToMenuButton {
+    width: 50%;
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+#tryAgainButton {
+    width: 25%;
+    margin-left: 5%;
+    margin-top: 10%;
+}

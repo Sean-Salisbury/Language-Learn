@@ -64,9 +64,17 @@
                     
                 
 
-                <div class="col-lg-12 questionContainer text-center">
+                <div class="col-lg-12 nextSubmitButtonContainer text-center">
                     <button class="btn btn-success float-none" id="submitButton" onclick="submitAnswer()">Submit</button>
                     <button class="btn btn-info float-none" id="nextButton" onclick="questionType()">Next</button>
+                    <div id="popupbox">
+                        <h3> Well Done </h4>
+                        <h4 id="courseCompletePopupText"></h3>
+                        <button class="btn btn-success float-start" id="backToMenuButton" onclick="location.href='../index.html'">Back to Menu</button>
+                        <button class="btn btn-info float-start" id="tryAgainButton" onclick="location.href='/html/courses/course1.html'">Try Again</button>
+
+                    </div>
+
                 </div>
 
                 <footer class="col-lg-12 footerContainer text-center">
