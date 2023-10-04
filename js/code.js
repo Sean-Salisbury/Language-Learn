@@ -199,5 +199,13 @@ function userAnswer4Clicked() {
 
 function nextCourse(courseNumber) {
     localStorage.setItem("courseNumber" ,courseNumber)
-    location.href='/Language-Learn/html/courses.html';
+    location.href='/html/courses.html';
 }
+
+function tryAgainFunction() {
+    location.href='/html/courses.html';
+};
+
+function backToMenuFunction() {
+    location.href='/html/index.html'
+};
