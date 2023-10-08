@@ -9,6 +9,11 @@ var amountOfUserAnswerButtons = 10;
 var userAnswersSelected = []
 var currentButton = 0;
 
+//temporary to make github work
+
+var currentURL = window.location.href;
+console.log (currentURL);
+
 //STORED BACKEND
 
 var leastWrongAnswers = {course1: 100, course2: 100, };
@@ -173,6 +178,9 @@ function questionType() {
         $("#userAnswerCurrent" + i).hide();
         $("#userAnswerCurrent" + i).html("");
     };
+
+    //Resetting array of the previous answer
+    userAnswersSelected = [];
 
     //Changing button colours back to their normal active colours
 
@@ -341,13 +349,30 @@ function userAnswerCurrentClicked(userAnswerCurrentClicked) {
 
 function nextCourse(courseNumber) {
     localStorage.setItem("courseNumber" ,courseNumber)
-    location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/index.html") {
+        location.href = '/Language-Learn/html/courses.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    }
+    
 }
 
 function tryAgainFunction() {
-    location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
+        location.href = '/Language-Learn/html/courses.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    }
 };
 
 function backToMenuFunction() {
-    location.href = '/Language-Learn/Language-Learn/index.html';
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
+        location.href = '/Language-Learn/index.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/index.html';
+    }
 };
+
