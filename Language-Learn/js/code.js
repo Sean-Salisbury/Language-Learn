@@ -341,13 +341,13 @@ function userAnswerCurrentClicked(userAnswerCurrentClicked) {
 
 function nextCourse(courseNumber) {
     localStorage.setItem("courseNumber" ,courseNumber)
-    location.href = '/Language-Learn/html/courses.html';
+    location.href = '/Language-Learn/Language-Learn/html/courses.html';
 }
 
 function tryAgainFunction() {
-    location.href = '/Language-Learn/html/courses.html';
+    location.href = '/Language-Learn/Language-Learn/html/courses.html';
 };
 
 function backToMenuFunction() {
-    location.href = '/Language-Learn/index.html';
+    location.href = '/Language-Learn/Language-Learn/index.html';
 };
