@@ -1,16 +1,23 @@
 //STORED FRONTEND
 
-var progressBarAmount = 0;
+var progressBarAmount = 0
+var progressBarInterval = 0;
 var questionNumberGlobal = 1;
+var question = null;
 var wrongAnswers = {course1: 0, course2: 0, }
+var amountOfUserAnswerButtons = 10;
+var userAnswersSelected = []
+var currentButton = 0;
 
 //STORED BACKEND
 
 var leastWrongAnswers = {course1: 100, course2: 100, };
-var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", wrongAnswers: ["Yes", "No", "Maybe"]};
-var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"bicicleta", wrongAnswers: ["Dinero", "Leche", "Manzana"]};
-var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", wrongAnswers: ["Leche", "Manzana", "Dinero"]};
-var course1 = [question1, question2, question3];
+var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", correctAnswer:"Hello", possibleAnswers: ["Yes", "No", "Maybe", "Hello"]};
+var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"Bicicleta", possibleAnswers: ["Dinero", "Leche", "Manzana", "Bicicleta"]};
+var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", possibleAnswers: ["Leche", "Manzana", "Dinero", "Bonito"]};
+var question4 = {question:"Select the Correct Meaning", questionSubject:"Bread", correctAnswer:"Pan", possibleAnswers: ["Mujer", "Agua", "Dinero", "Pan"]};
+var question5 = {question:"Write this in English", questionSubject:"Ella es una niña", correctAnswer:"Sheisagirl", possibleAnswers: ["It", "girl", "bread", "a", "is", "She", "apples", "milk"]};
+var course1 = [question1, question2, question3, question4, question5];
 var courses = [course1]; 
 
 window.addEventListener('load', hasLoadedPage()) 
@@ -23,15 +30,14 @@ function hasLoadedPage() {
     //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
 
     let ItemsInCurrentCourse = courses[localStorage.getItem('courseNumber') -1].length;
-    progressBarAmount = 100 / ItemsInCurrentCourse;
-    console.log(progressBarAmount)
+    progressBarInterval = 100 / ItemsInCurrentCourse;
 }
 
 /**********************************************************************************************************************************************************
 SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS 
 ***********************************************************************************************************************************************************/
 
-function selectTheCorrectMeaning(question) {
+function selectTheCorrectMeaning() {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
@@ -41,43 +47,41 @@ function selectTheCorrectMeaning(question) {
 
     //Generating Question Page
 
-    $(".question").text(question.question);
-    $(".questionSubject").text(question.questionSubject);
+    $(".question").text(currentQuestion.question);
+    $(".questionSubject").text(currentQuestion.questionSubject);
 
-    let possibleAnswerPositions = [1, 2, 3, 4]
 
     //Shuffling the Array
 
-    for (let i = possibleAnswerPositions.length - 1; i > 0; i--) {
+    for (let i = currentQuestion.possibleAnswers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         // Swap elements
-        [possibleAnswerPositions[i], possibleAnswerPositions[j]] = [possibleAnswerPositions[j], possibleAnswerPositions[i]]; 
+        [currentQuestion.possibleAnswers[i], currentQuestion.possibleAnswers[j]] = [currentQuestion.possibleAnswers[j], currentQuestion.possibleAnswers[i]]; 
     }
 
-    //Using the pop method to take out the last number in the array which will be the index of the answer button
+    for (let i = 10; i > 0; i--) {
+        $("#userAnswer" + i).show();
+    };
 
-    questionAnswerPosition = possibleAnswerPositions.pop();
+    // Renaming the buttons to be the different words
 
-    //Logging the array and the answer position for debugging
-
-
-    console.log(questionAnswerPosition)
-    console.log(possibleAnswerPositions)
-    console.log()
-
+    for (let i = amountOfUserAnswerButtons; i > 0; i--) {
+        $("#userAnswer" + i).html(currentQuestion.possibleAnswers[i-1]);
+    }
     
+    // Hiding other buttons which are not used
 
-    $("#userAnswer" + questionAnswerPosition).html(question.correctAnswer);
-    $("#userAnswer" + possibleAnswerPositions[0]).html(question.wrongAnswers[0]);
-    $("#userAnswer" + possibleAnswerPositions[1]).html(question.wrongAnswers[1]);
-    $("#userAnswer" + possibleAnswerPositions[2]).html(question.wrongAnswers[2]);
+    for (i = amountOfUserAnswerButtons; i > currentQuestion.possibleAnswers.length; i--) {
+        $("#userAnswer" + i).hide()
+    } 
+
     
 }
 /**********************************************************************************************************************************************************
 FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS 
 ***********************************************************************************************************************************************************/
 
-function fillInTheBlank(question) {
+function fillInTheBlank() {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
@@ -87,59 +91,135 @@ function fillInTheBlank(question) {
 
     //Generating Question Page
 
-    $(".question").text(question.question);
-    $(".questionSubject").text(question.questionSubject);
+    $(".question").text(currentQuestion.question);
+    $(".questionSubject").text(currentQuestion.questionSubject);
 
-    let possibleAnswerPositions = [1, 2, 3, 4]
 
     //Shuffling the Array
 
-    for (let i = possibleAnswerPositions.length - 1; i > 0; i--) {
+    for (let i = currentQuestion.possibleAnswers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         // Swap elements
-        [possibleAnswerPositions[i], possibleAnswerPositions[j]] = [possibleAnswerPositions[j], possibleAnswerPositions[i]]; 
+        [currentQuestion.possibleAnswers[i], currentQuestion.possibleAnswers[j]] = [currentQuestion.possibleAnswers[j], currentQuestion.possibleAnswers[i]]; 
     }
 
-    //Using the pop method to take out the last number in the array which will be the index of the answer button
 
-    questionAnswerPosition = possibleAnswerPositions.pop();
+    for (let i = 10; i > 0; i--) {
+        $("#userAnswer" + i).show();
+    };
 
-    //Logging the array and the answer position for debugging
+    // Renaming the buttons to be the different words
 
-
-    console.log(questionAnswerPosition)
-    console.log(possibleAnswerPositions)
-    console.log()
-
+    for (let i = amountOfUserAnswerButtons; i > 0; i--) {
+        $("#userAnswer" + i).html(currentQuestion.possibleAnswers[i-1]);
+    }
     
+    // Hiding other buttons which are not used
 
-    $("#userAnswer" + questionAnswerPosition).html(question.correctAnswer);
-    $("#userAnswer" + possibleAnswerPositions[0]).html(question.wrongAnswers[0]);
-    $("#userAnswer" + possibleAnswerPositions[1]).html(question.wrongAnswers[1]);
-    $("#userAnswer" + possibleAnswerPositions[2]).html(question.wrongAnswers[2]);
+    for (i = amountOfUserAnswerButtons; i > currentQuestion.possibleAnswers.length; i--) {
+        $("#userAnswer" + i).hide()
+    } 
     
 }
 
-//Determining what the question type is
+function writeThisInEnglish() {
+    $('.questionAnswerCheck').text("");
+    $('#submitButton').show();
+    $('#nextButton').hide();
+    $('#popupbox').hide();
+    console.log("writeThisInEnglish Loaded");
+    
+
+    //Generating Question Page
+
+    $(".question").text(currentQuestion.question);
+    $(".questionSubject").text(currentQuestion.questionSubject);
+
+
+    //Shuffling the Array
+
+    for (let i = currentQuestion.possibleAnswers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap elements
+        [currentQuestion.possibleAnswers[i], currentQuestion.possibleAnswers[j]] = [currentQuestion.possibleAnswers[j], currentQuestion.possibleAnswers[i]]; 
+    }
+
+    for (let i = 10; i > 0; i--) {
+        $("#userAnswer" + i).show();
+    };
+
+    // Renaming the buttons to be the different words
+
+    for (let i = amountOfUserAnswerButtons; i > 0; i--) {
+        $("#userAnswer" + i).html(currentQuestion.possibleAnswers[i-1]);
+    }
+    
+    // Hiding other buttons which are not used
+
+    for (i = amountOfUserAnswerButtons - currentQuestion.possibleAnswers.length; i > 0; i--) {
+        $("#userAnswer" + amountOfUserAnswerButtons--).hide()
+    } 
+
+}
+
+
+
 
 function questionType() {
+
+    //Removing the previous answer
+
+    for (let i = 10; i > 0; i--) {
+        $("#userAnswerCurrent" + i).hide();
+        $("#userAnswerCurrent" + i).html("");
+    };
+
+    //Changing button colours back to their normal active colours
+
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $(".userAnswerButton").css("border-color", "#0d6efd");
+
+    //Determining what the question type is
+
     courseNumber = localStorage.getItem('courseNumber') -1;
     questionNumber = questionNumberGlobal - 1;
     let currentCourse = courses[courseNumber];
-    let currentQuestion = currentCourse[questionNumber];
+    currentQuestion = currentCourse[questionNumber];
     questionNumberGlobal++;
     if (currentQuestion.question == "Select the Correct Meaning") {
-        selectTheCorrectMeaning(currentQuestion);
+        selectTheCorrectMeaning();
     }
     else if (currentQuestion.question == "Fill in the blank"){
-        fillInTheBlank(currentQuestion);
+        fillInTheBlank();
+    }
+    else if (currentQuestion.question == "Write this in English"){
+        writeThisInEnglish();
     }
 }
 
 // The submit button
 
 function submitAnswer() {
-    if (userAnswer == questionAnswerPosition) {
+
+    //Combining all the buttons pressed into one answer
+
+    let userAnswerSubmitted = "";
+
+    let userAnswerAtCurrentIndex = "";
+    let userAnswersSelectedLength = userAnswersSelected.length;
+    for (let i = 0; i < userAnswersSelectedLength; i++) {
+        selectedAnswerIndex = userAnswersSelected.shift() + 1;
+        console.log(selectedAnswerIndex);
+        userAnswerAtCurrentIndex = $("#userAnswer" + selectedAnswerIndex).html();
+        userAnswerSubmitted = userAnswerSubmitted + userAnswerAtCurrentIndex;
+        console.log(userAnswerSubmitted);
+    }
+
+    
+    // Seeing is the answer is right
+
+    if (userAnswerSubmitted == currentQuestion.correctAnswer) { 
+        progressBarAmount = progressBarAmount + progressBarInterval;
         $(".questionAnswerCheck").text("Correct");
         $("#submitButton").hide();
         $("#nextButton").show();
@@ -147,23 +227,29 @@ function submitAnswer() {
         $(".progress-bar").css("width", progressBarAmount + "%");
         if (progressBarAmount >= 100) {
             let currentCourse = "course" + localStorage.getItem('courseNumber'); 
-            $("#userAnswer1").hide(); 
-            $("#userAnswer2").hide();
-            $("#userAnswer3").hide(); 
-            $("#userAnswer4").hide();
+            for (let i = 10; i > 0; i--) {
+                $("#userAnswer" + i).hide();
+            };
             $('#popupbox').show();
-            $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Pressed " 
+            $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Submitted " 
             + wrongAnswers[currentCourse] + " Incorrect Answers.");
         }
-        else {
-            $('#popupbox').hide();
-        }
-
-        progressBarAmount = progressBarAmount + progressBarAmount;
     }
     else {
         $(".questionAnswerCheck").text("Wrong");
         wrongAnswers.course1 ++; 
+
+        //Removing the previous answer
+
+        for (let i = 10; i > 0; i--) {
+            $("#userAnswerCurrent" + i).hide();
+            $("#userAnswerCurrent" + i).html("");
+        };
+
+        //Changing button colours back to their normal active colours
+
+        $(".userAnswerButton").css("background-color", "#0d6efd");
+        $(".userAnswerButton").css("border-color", "#0d6efd");
     }
 }
 
@@ -171,28 +257,84 @@ function submitAnswer() {
 
 // The answer buttons
 
-function userAnswer1Clicked() {
-    userAnswer = 1;
-    $(".userAnswerButton").css("background-color", "#0d6efd");
-    $("#userAnswer1").css("background-color", "#2349A0");
+function userAnswerClicked(userAnswerClicked) {
+    let indexOfCurrentItem = userAnswersSelected.indexOf(userAnswerClicked-1);
+    if (userAnswersSelected[indexOfCurrentItem] != (userAnswerClicked-1)) {
+
+
+        
+
+        // starting on AnswerCurrentButton 1 if the array is zero
+        /*if (userAnswersSelected.length == 0){
+            currentButton = 1;
+            console.log(currentButton);
+        }*/
+        
+        if (currentButton != 10) {
+            currentButton ++;
+            console.log(currentButton);
+            userAnswersSelected.push((userAnswerClicked-1));
+        }
+        else {
+            console.log ("NEW ELSE NEW ELSE NEW ELSE")
+            userAnswersSelected = [];
+            for (let i = 1; i <= 10; i++) {
+                if  ($("#userAnswerCurrent" + i).html() == "") {
+                    console.log ("its nothing");
+                    console.log(currentButton);
+                    console.log("this is i:" + i);
+                    
+                }
+                else {
+                    console.log ("its something");
+                    console.log($("#userAnswerCurrent" + i).html());
+                    indexOfCurrentButton = currentQuestion.possibleAnswers.indexOf($("#userAnswerCurrent" + i).html());
+                    userAnswersSelected.push(indexOfCurrentButton);
+                    $("#userAnswerCurrent" + i).hide();
+                    $("#userAnswerCurrent" + i).html("");
+                    console.log("this is i:" + i);
+                }
+            }
+
+            currentButton = 1;
+            userAnswersSelected.push((userAnswerClicked-1));
+
+            for (let i = 0; i < userAnswersSelected.length; i++) {
+                $("#userAnswerCurrent" + currentButton).html(currentQuestion.possibleAnswers[userAnswersSelected[i - 1]]);
+                if ($("#userAnswerCurrent" + currentButton).html() != "") {
+                    $("#userAnswerCurrent" + currentButton).show();
+                    currentButton ++;
+                }
+            }
+
+        }
+
+        
+        $("#userAnswerCurrent" + currentButton).show();
+        $("#userAnswerCurrent" + currentButton).html(currentQuestion.possibleAnswers[userAnswerClicked-1]);
+
+    }
+    else {
+        console.log("NOT DOING ANYTHING");
+    }
+    //Changing button colours of button pressed to show they are deactivated
+
+    $("#userAnswer" + userAnswerClicked).css("background-color", "#A8B3B5")
+    $("#userAnswer" + userAnswerClicked).css("border-color", "#A8B3B5")
 }
 
-function userAnswer2Clicked() {
-    userAnswer = 2;
-    $(".userAnswerButton").css("background-color", "#0d6efd");
-    $("#userAnswer2").css("background-color", "#2349A0");
-}
+function userAnswerCurrentClicked(userAnswerCurrentClicked) {
+    let indexOfButtonPressedInPossibleAnswers = currentQuestion.possibleAnswers.indexOf($("#userAnswerCurrent" + userAnswerCurrentClicked).html());
+    indexOfCurrentItem = userAnswersSelected.indexOf(indexOfButtonPressedInPossibleAnswers)
+    userAnswersSelected.splice(indexOfCurrentItem, 1);
 
-function userAnswer3Clicked() {
-    userAnswer = 3;
-    $(".userAnswerButton").css("background-color", "#0d6efd");
-    $("#userAnswer3").css("background-color", "#2349A0");
-}
+    $("#userAnswerCurrent" + userAnswerCurrentClicked).hide();
+    $("#userAnswerCurrent" + userAnswerCurrentClicked).html("");
 
-function userAnswer4Clicked() {
-    userAnswer = 4;
-    $(".userAnswerButton").css("background-color", "#0d6efd");
-    $("#userAnswer4").css("background-color", "#2349A0");
+    //Changing button colours of button pressed to show they are active again
+
+    $("#userAnswer" + (indexOfButtonPressedInPossibleAnswers + 1)).css("background-color", "#0d6efd");
+    $("#userAnswer" + (indexOfButtonPressedInPossibleAnswers + 1)).css("border-color", "#0d6efd");
 }
 
 // The next course button

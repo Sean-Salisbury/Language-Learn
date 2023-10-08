@@ -142,3 +142,7 @@ a {
     margin-left: 5%;
     margin-top: 10%;
 }
+
+.progress {
+    border-radius: 0%;
+}
