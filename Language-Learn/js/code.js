@@ -10,6 +10,7 @@ var userAnswersSelected = []
 var currentButton = 0;
 var difficulty = null;
 var userAnswer = "";
+var currentCourseHardMode = {};
 
 //temporary to make github work
 
@@ -37,12 +38,25 @@ function hasLoadedPage() {
 
     difficulty = localStorage.getItem('difficulty');
 
+    if (difficulty == "Normal") {
+        //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
+        let ItemsInCurrentCourse = courses[localStorage.getItem('courseNumber') -1].length;
+        progressBarInterval = 100 / ItemsInCurrentCourse;
+    }
+    else {
+        //Removing the fill in the blank questions for hard mode as they dont make sense when there is no selecting an answer
+        currentCourseHardMode = courses[localStorage.getItem('courseNumber') -1]
+        for (i = 0; i < courses[localStorage.getItem('courseNumber') -1].length; i++) {
+            if (currentCourseHardMode[i].question == "Fill in the blank") {
+                currentCourseHardMode.splice(i, 1);
+            }
+        }
+        //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
+        let ItemsInCurrentCourse = currentCourseHardMode.length;
+        progressBarInterval = 100 / ItemsInCurrentCourse;
+    }
+
     questionType();
-
-    //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
-
-    let ItemsInCurrentCourse = courses[localStorage.getItem('courseNumber') -1].length;
-    progressBarInterval = 100 / ItemsInCurrentCourse;
 }
 
 /**********************************************************************************************************************************************************
@@ -439,7 +453,7 @@ function questionType() {
 
         courseNumber = localStorage.getItem('courseNumber') -1;
         questionNumber = questionNumberGlobal - 1;
-        let currentCourse = courses[courseNumber];
+        let currentCourse = currentCourseHardMode;
         currentQuestion = currentCourse[questionNumber];
         questionNumberGlobal++;
 
