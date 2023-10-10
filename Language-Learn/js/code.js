@@ -8,6 +8,8 @@ var wrongAnswers = {course1: 0, course2: 0, }
 var amountOfUserAnswerButtons = 10;
 var userAnswersSelected = []
 var currentButton = 0;
+var difficulty = null;
+var userAnswer = "";
 
 //temporary to make github work
 
@@ -30,12 +32,54 @@ window.addEventListener('load', hasLoadedPage())
 function hasLoadedPage() {
     $(".progress-bar").attr("aria-valuenow", "0");
     $(".progress-bar").css("width", "0%");
-    questionType(1)
+
+    //Setting the Difficult variable from the localStorage variable "difficulty"
+
+    difficulty = localStorage.getItem('difficulty');
+
+    questionType();
 
     //Getting the amount the Progress bar should move each time depending on the amount of items in the current course selected.
 
     let ItemsInCurrentCourse = courses[localStorage.getItem('courseNumber') -1].length;
     progressBarInterval = 100 / ItemsInCurrentCourse;
+}
+
+/**********************************************************************************************************************************************************
+This is all for Normal Mode
+***********************************************************************************************************************************************************/
+
+function normalMode() {
+
+    $('.userAnswerButton').show()
+    $('.userAnswerInputForm').hide()
+    
+    //Removing the previous answer
+
+    for (let i = 10; i > 0; i--) {
+        $("#userAnswerCurrent" + i).hide();
+        $("#userAnswerCurrent" + i).html("");
+    };
+
+    //Resetting array of the previous answer
+
+    userAnswersSelected = [];
+
+    //Changing button colours back to their normal active colours
+
+    $(".userAnswerButton").css("background-color", "#0d6efd");
+    $(".userAnswerButton").css("border-color", "#0d6efd");
+
+
+    if (currentQuestion.question == "Select the Correct Meaning") {
+        selectTheCorrectMeaning();
+    }
+    else if (currentQuestion.question == "Fill in the blank"){
+        fillInTheBlank();
+    }
+    else if (currentQuestion.question == "Write this in English"){
+        writeThisInEnglish();
+    }
 }
 
 /**********************************************************************************************************************************************************
@@ -167,48 +211,8 @@ function writeThisInEnglish() {
 
 }
 
-
-
-
-function questionType() {
-
-    //Removing the previous answer
-
-    for (let i = 10; i > 0; i--) {
-        $("#userAnswerCurrent" + i).hide();
-        $("#userAnswerCurrent" + i).html("");
-    };
-
-    //Resetting array of the previous answer
-    userAnswersSelected = [];
-
-    //Changing button colours back to their normal active colours
-
-    $(".userAnswerButton").css("background-color", "#0d6efd");
-    $(".userAnswerButton").css("border-color", "#0d6efd");
-
-    //Determining what the question type is
-
-    courseNumber = localStorage.getItem('courseNumber') -1;
-    questionNumber = questionNumberGlobal - 1;
-    let currentCourse = courses[courseNumber];
-    currentQuestion = currentCourse[questionNumber];
-    questionNumberGlobal++;
-    if (currentQuestion.question == "Select the Correct Meaning") {
-        selectTheCorrectMeaning();
-    }
-    else if (currentQuestion.question == "Fill in the blank"){
-        fillInTheBlank();
-    }
-    else if (currentQuestion.question == "Write this in English"){
-        writeThisInEnglish();
-    }
-}
-
-// The submit button
-
-function submitAnswer() {
-
+function submitAnswerNormal() {
+    
     //Combining all the buttons pressed into one answer
 
     let userAnswerSubmitted = "";
@@ -261,22 +265,11 @@ function submitAnswer() {
     }
 }
 
-
-
 // The answer buttons
 
 function userAnswerClicked(userAnswerClicked) {
     let indexOfCurrentItem = userAnswersSelected.indexOf(userAnswerClicked-1);
     if (userAnswersSelected[indexOfCurrentItem] != (userAnswerClicked-1)) {
-
-
-        
-
-        // starting on AnswerCurrentButton 1 if the array is zero
-        /*if (userAnswersSelected.length == 0){
-            currentButton = 1;
-            console.log(currentButton);
-        }*/
         
         if (currentButton != 10) {
             currentButton ++;
@@ -345,9 +338,122 @@ function userAnswerCurrentClicked(userAnswerCurrentClicked) {
     $("#userAnswer" + (indexOfButtonPressedInPossibleAnswers + 1)).css("border-color", "#0d6efd");
 }
 
+
+/**********************************************************************************************************************************************************
+This is all for Hard Mode
+***********************************************************************************************************************************************************/
+
+function hardMode() {
+    $('.questionAnswerCheck').text("");
+    $('#submitButton').show();
+    $('#nextButton').hide();
+    $('#popupbox').hide();
+    console.log("hardMode Loaded");
+
+    $('.userAnswerButton').hide()
+    $('.userAnswerInputForm').show()
+
+    $(".question").text(currentQuestion.question);
+    $(".questionSubject").text(currentQuestion.questionSubject);
+}
+
+function submitAnswerHard() {
+    userAnswer = $('#userAnswer').val().toLowerCase();
+    console.log(userAnswer);
+
+    let correctAnswerHardMode = currentQuestion.correctAnswer.toLowerCase();
+
+    if (userAnswer == correctAnswerHardMode) {
+        console.log("correct")
+        $(".questionAnswerCheck").text("Correct");
+        correctAnswerHard();
+    }
+
+
+    else {
+        $(".questionAnswerCheck").text("Wrong");
+        wrongAnswers.course1 ++; 
+    }
+    
+
+}
+
+
+
+function correctAnswerHard() {
+    progressBarAmount = progressBarAmount + progressBarInterval;
+    $(".questionAnswerCheck").text("Correct");
+    $("#submitButton").hide();
+    $("#nextButton").show();
+    $(".progress-bar").attr("aria-valuenow", progressBarAmount);
+    $(".progress-bar").css("width", progressBarAmount + "%");
+
+    if (progressBarAmount >= 100) {
+        let currentCourse = "course" + localStorage.getItem('courseNumber'); 
+        $('#popupbox').show();
+        $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Submitted " 
+        + wrongAnswers[currentCourse] + " Incorrect Answers.");
+    }
+}
+
+/**********************************************************************************************************************************************************
+This is for Both
+***********************************************************************************************************************************************************/
+
+function questionType() {
+
+    //Determining the difficulty
+
+    if (difficulty == "Normal") {
+        
+        //Determining what the question type is
+
+        courseNumber = localStorage.getItem('courseNumber') -1;
+        questionNumber = questionNumberGlobal - 1;
+        let currentCourse = courses[courseNumber];
+        currentQuestion = currentCourse[questionNumber];
+        questionNumberGlobal++;
+
+        normalMode(); 
+    }
+    else {
+
+        //Determining what the question type is
+
+        courseNumber = localStorage.getItem('courseNumber') -1;
+        questionNumber = questionNumberGlobal - 1;
+        let currentCourse = courses[courseNumber];
+        currentQuestion = currentCourse[questionNumber];
+        questionNumberGlobal++;
+
+        hardMode();
+    }
+
+    
+}
+
+// The submit button
+
+function submitAnswer() {
+
+    if (difficulty == "Hard") {
+        submitAnswerHard();
+    }
+    else {
+        submitAnswerNormal();
+    }
+
+    
+}
+
+
+
+
+
 // The next course button
 
-function nextCourse(courseNumber) {
+function nextCourse(courseNumber, difficulty) {
+    localStorage.setItem("difficulty" , difficulty)
     localStorage.setItem("courseNumber" ,courseNumber)
     if (currentURL == "http://127.0.0.1:5500/Language-Learn/index.html") {
         location.href = '/Language-Learn/html/courses.html'
