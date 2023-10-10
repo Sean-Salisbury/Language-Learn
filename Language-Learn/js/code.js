@@ -23,7 +23,7 @@ var question1 = {question:"Select the Correct Meaning", questionSubject:"Hola", 
 var question2 = {question:"Fill in the blank", questionSubject:"Ella tiene una ____ grande", correctAnswer:"Bicicleta", possibleAnswers: ["Dinero", "Leche", "Manzana", "Bicicleta"]};
 var question3 = {question:"Select the Correct Meaning", questionSubject:"Pretty", correctAnswer:"Bonito", possibleAnswers: ["Leche", "Manzana", "Dinero", "Bonito"]};
 var question4 = {question:"Select the Correct Meaning", questionSubject:"Bread", correctAnswer:"Pan", possibleAnswers: ["Mujer", "Agua", "Dinero", "Pan"]};
-var question5 = {question:"Write this in English", questionSubject:"Ella es una niña", correctAnswer:"Sheisagirl", possibleAnswers: ["It", "girl", "bread", "a", "is", "She", "apples", "milk"]};
+var question5 = {question:"Write this in English", questionSubject:"Ella es una niña", correctAnswer:"She is a girl", possibleAnswers: ["It", "girl", "bread", "a", "is", "She", "apples", "milk"]};
 var course1 = [question1, question2, question3, question4, question5];
 var courses = [course1]; 
 
@@ -212,6 +212,11 @@ function writeThisInEnglish() {
 }
 
 function submitAnswerNormal() {
+
+    //Making the correct answer have no spaces for comparing with
+
+    let correctAnswerNormalMode = currentQuestion.correctAnswer.replace(/ /g, "");
+    console.log (correctAnswerNormalMode);
     
     //Combining all the buttons pressed into one answer
 
@@ -230,7 +235,7 @@ function submitAnswerNormal() {
     
     // Seeing is the answer is right
 
-    if (userAnswerSubmitted == currentQuestion.correctAnswer) { 
+    if (userAnswerSubmitted == correctAnswerNormalMode) { 
         progressBarAmount = progressBarAmount + progressBarInterval;
         $(".questionAnswerCheck").text("Correct");
         $("#submitButton").hide();
@@ -363,13 +368,25 @@ function submitAnswerHard() {
 
     let correctAnswerHardMode = currentQuestion.correctAnswer.toLowerCase();
 
+    // I AM UNSURE HOW TO COMPARE WITH CORRECT ANSWER IF IT IS PARTIALLY CORRECT
+
+    let differingLetters = [];
+
+    for (i = 0; i < correctAnswerHardMode.length; i++) {
+        if (correctAnswerHardMode.charAt(i) != userAnswer.charAt(i)) {
+            differingLetters.push(userAnswer.charAt(i))
+        }
+    }
+
+    // MIGHT DELETE ^^^^
+
+    console.log (differingLetters);
+
     if (userAnswer == correctAnswerHardMode) {
         console.log("correct")
         $(".questionAnswerCheck").text("Correct");
         correctAnswerHard();
     }
-
-
     else {
         $(".questionAnswerCheck").text("Wrong");
         wrongAnswers.course1 ++; 

@@ -70,8 +70,8 @@ a {
 .footerContainer {
     height: 100px;
     background-color: lightblue;
-    position:absolute;
-    bottom:0;
+    position: fixed;
+    bottom: 0;
 }
 
 .questionAnswerCheck {
@@ -145,4 +145,10 @@ a {
 
 .progress {
     border-radius: 0%;
+}
+
+#userAnswer {
+    width: 50%;
+    text-align: center;
+    margin: auto;
 }
