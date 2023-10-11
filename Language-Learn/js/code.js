@@ -11,6 +11,9 @@ var currentButton = 0;
 var difficulty = null;
 var userAnswer = "";
 var currentCourseHardMode = {};
+var correctAnswerArrayInLetters = [];
+var userAnswerArrayInLetters = [];
+var comparisonArray = [];
 
 //temporary to make github work
 
@@ -262,6 +265,7 @@ function submitAnswerNormal() {
                 $("#userAnswer" + i).hide();
             };
             $('#popupbox').show();
+            $('#nextButton').hide();
             $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Submitted " 
             + wrongAnswers[currentCourse] + " Incorrect Answers.");
         }
@@ -366,6 +370,7 @@ function hardMode() {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
+    $('#userAnswer').val("")
     $('#popupbox').hide();
     console.log("hardMode Loaded");
 
@@ -382,19 +387,42 @@ function submitAnswerHard() {
 
     let correctAnswerHardMode = currentQuestion.correctAnswer.toLowerCase();
 
-    // I AM UNSURE HOW TO COMPARE WITH CORRECT ANSWER IF IT IS PARTIALLY CORRECT
-
-    let differingLetters = [];
-
     for (i = 0; i < correctAnswerHardMode.length; i++) {
-        if (correctAnswerHardMode.charAt(i) != userAnswer.charAt(i)) {
-            differingLetters.push(userAnswer.charAt(i))
-        }
+        correctAnswerArrayInLetters.push(correctAnswerHardMode.charAt(i)); 
     }
 
-    // MIGHT DELETE ^^^^
+    console.log (correctAnswerArrayInLetters);
 
-    console.log (differingLetters);
+    for (i = 0; i < userAnswer.length; i++) {
+        userAnswerArrayInLetters.push(userAnswer.charAt(i)); 
+    }
+
+    console.log (userAnswerArrayInLetters);
+
+    if (userAnswer != correctAnswerHardMode) {
+        console.log("It wrong");
+
+        let currentLetterCorrectIndex = null;
+        let userAnswerReplaced = userAnswer;
+        for (i = 0; i < userAnswer.length; i++) {
+            currentLetterCorrectIndex = userAnswerReplaced.indexOf(correctAnswerArrayInLetters[i])
+            comparisonArray.push(currentLetterCorrectIndex);
+            userAnswerReplaced = userAnswerReplaced.replace(correctAnswerArrayInLetters[i], "");
+            console.log(userAnswerReplaced)
+        }
+        let currentIndex = 0;
+
+        //THIS PART IS A LITTLE BROKEN
+
+        for (i = 0; i < correctAnswerHardMode.length; i++) {
+            comparisonArray[currentIndex] = comparisonArray[currentIndex] + i;
+            currentIndex ++;
+        }
+        console.log(comparisonArray);
+        
+    }
+
+
 
     if (userAnswer == correctAnswerHardMode) {
         console.log("correct")
@@ -406,7 +434,10 @@ function submitAnswerHard() {
         wrongAnswers.course1 ++; 
     }
     
-
+    userAnswerArrayInLetters = [];
+    correctAnswerArrayInLetters = [];
+    allComparisonArrays = [];
+    comparisonArray = [];
 }
 
 
@@ -422,6 +453,8 @@ function correctAnswerHard() {
     if (progressBarAmount >= 100) {
         let currentCourse = "course" + localStorage.getItem('courseNumber'); 
         $('#popupbox').show();
+        $('.userAnswerInputForm').hide()
+        $('#nextButton').hide();
         $('#courseCompletePopupText').html("You Completed Course " + localStorage.getItem('courseNumber') + ". You Submitted " 
         + wrongAnswers[currentCourse] + " Incorrect Answers.");
     }
