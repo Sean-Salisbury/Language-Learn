@@ -381,6 +381,19 @@ function hardMode() {
     $(".questionSubject").text(currentQuestion.questionSubject);
 }
 
+document.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        if ($('#userAnswer').val() != "") {
+            if ($('#nextButton').is(":visible") == true) {
+                $('#nextButton').click();
+            }
+            else if ($('#submitButton').is(":visible")) {
+                $('#submitButton').click();
+            }
+        }
+    }
+})
+
 function submitAnswerHard() {
     userAnswer = $('#userAnswer').val().toLowerCase();
     console.log(userAnswer);
@@ -404,20 +417,13 @@ function submitAnswerHard() {
 
         let currentLetterCorrectIndex = null;
         let userAnswerReplaced = userAnswer;
-        for (i = 0; i < userAnswer.length; i++) {
+        for (i = 0; i < correctAnswerHardMode.length; i++) {
             currentLetterCorrectIndex = userAnswerReplaced.indexOf(correctAnswerArrayInLetters[i])
             comparisonArray.push(currentLetterCorrectIndex);
-            userAnswerReplaced = userAnswerReplaced.replace(correctAnswerArrayInLetters[i], "");
+            userAnswerReplaced = userAnswerReplaced.replace(correctAnswerArrayInLetters[i], "1");
             console.log(userAnswerReplaced)
         }
-        let currentIndex = 0;
 
-        //THIS PART IS A LITTLE BROKEN
-
-        for (i = 0; i < correctAnswerHardMode.length; i++) {
-            comparisonArray[currentIndex] = comparisonArray[currentIndex] + i;
-            currentIndex ++;
-        }
         console.log(comparisonArray);
         
     }
