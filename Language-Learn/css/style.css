@@ -94,6 +94,11 @@ a {
     font-size: 50px;
 }
 
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .btn-success {
     width: 25%;
     height:75px;

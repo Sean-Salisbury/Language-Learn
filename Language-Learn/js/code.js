@@ -383,13 +383,12 @@ function hardMode() {
 
 document.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
-        if ($('#userAnswer').val() != "") {
-            if ($('#nextButton').is(":visible") == true) {
-                $('#nextButton').click();
-            }
-            else if ($('#submitButton').is(":visible")) {
-                $('#submitButton').click();
-            }
+        event.preventDefault();
+        if ($('#nextButton').is(":visible") == true) {
+            $('#nextButton').click();
+        }
+        else if ($('#submitButton').is(":visible")) {
+            $('#submitButton').click();
         }
     }
 })
