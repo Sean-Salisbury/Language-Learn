@@ -69,8 +69,8 @@
 
                             <!-- For Hard Mode -->
 
-                            <div class="form-control form-control-lg userAnswerInputForm" spellcheck="false" type="text" aria-label="form-control" id="userAnswer" contenteditable="true"></div>
-                            <div id="enterToContinue">Press Enter to Continue</div>
+                            <div class="form-control form-control-lg userAnswerInputForm" spellcheck="false" type="text" aria-label="form-control" id="userAnswer" onblur="this.focus()" autofocus contenteditable="true"></div>
+                            <div id="enterToContinue">Press Enter or Click the Button Below to Continue</div>
                         </div>
                         <div class="col-lg-12 questionUserAnswerContainer text-center">
 
@@ -95,6 +95,7 @@
                 <div class="col-lg-12 nextSubmitButtonContainer text-center">
                     <button class="btn btn-success float-none" id="submitButton" onclick="submitAnswer()">Submit</button>
                     <button class="btn btn-info float-none" id="nextButton" onclick="questionType()">Next</button>
+                    <button class="btn btn-info float-none" id="continueButton" onclick="continueFromWrongAnswer()">Continue</button>
                     <div id="popupbox">
                         <h3> Well Done </h4>
                         <h4 id="courseCompletePopupText"></h3>

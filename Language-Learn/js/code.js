@@ -195,6 +195,7 @@ function normalMode() {
 
     $('.userAnswerButton').show()
     $('.userAnswerInputForm').hide()
+    $('#continueButton').hide();
     
     //Removing the previous answer
 
@@ -485,6 +486,7 @@ function hardMode() {
     $('#nextButton').hide();
     $('#userAnswer').text("")
     $('#popupbox').hide();
+    $('#continueButton').hide();
     console.log("hardMode Loaded");
 
     $('.userAnswerButton').hide()
@@ -651,33 +653,38 @@ function submitAnswerHard() {
             $('#userAnswer').html(userAnswer);
         }
         $('#enterToContinue').show();
-        document.addEventListener("keypress", function userAnswerChanged(event) {
-            if (event.key == "Enter") {
-                document.removeEventListener ("keypress", userAnswerChanged);
-                event.preventDefault();
-                $('#userAnswer').html("");
-                $('#enterToContinue').hide();
-                userIsViewingWhyAnswerIncorrect = false;
+        $('#continueButton').show();
+        $('#submitButton').hide();
+        document.addEventListener("keypress", userWhyAnswerIncorrectKeyPress);
+    }
+}
+
+function userWhyAnswerIncorrectKeyPress(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        continueFromWrongAnswer();
+    }
+    else {
+        document.addEventListener("input", function userAnswerChanged() {
+            if (showHint == true) {
+                $('#userAnswer').html(userAnswerWithColouredMistakes);
             }
             else {
-                document.addEventListener("input", function userAnswerChanged() {
-                    if (showHint == true) {
-                        $('#userAnswer').html(userAnswerWithColouredMistakes);
-                    }
-                    else {
-                        $('#userAnswer').html(userAnswer);
-                    }
-                    document.removeEventListener ("input", userAnswerChanged);
-                })
+                $('#userAnswer').html(userAnswer);
             }
-            //$('#userAnswer').text(event.key);
-            //moveInputCadetToEnd("userAnswer");
-            
+            document.removeEventListener ("input", userAnswerChanged);
         })
     }
 }
 
-
+function continueFromWrongAnswer() {
+    $('#userAnswer').html("");
+    $('#enterToContinue').hide();
+    $('#submitButton').show();
+    $('#continueButton').hide();
+    userIsViewingWhyAnswerIncorrect = false;
+    document.removeEventListener ("keypress", userWhyAnswerIncorrectKeyPress);
+}
 
 function correctAnswerHard() {
     progressBarAmount = progressBarAmount + progressBarInterval;
