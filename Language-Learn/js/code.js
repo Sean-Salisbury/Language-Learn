@@ -530,7 +530,7 @@ function submitAnswerHard() {
         let correctLettersCounter = 0;
         let incorrectLetters = 0;
 
-        for (i = 0; i <= userAnswerArrayInLetters.length; i++) {
+        for (i = 0; i <= correctAnswerArrayInLetters.length; i++) {
             currentLetter = correctAnswerArrayInLetters[currentLetterCounter];
             indexOfCurrentLetterInUserAnswers = userAnswerArrayInLetters.indexOf(currentLetter);
             if (currentLetter == undefined) {
@@ -538,10 +538,10 @@ function submitAnswerHard() {
                 indexOfCurrentLetterInUserAnswers = null;
             }
             // When the answer is correct
-            else if (userAnswerArrayInLetters[i] == currentLetter && userAnswerArrayInLetters[i] != undefined) {
-                correctIndexForCurrentLetter = correctAnswerArrayInLetters.indexOf(userAnswerArrayInLetters[i])
+            else if (userAnswerArrayInLetters[indexOfCurrentLetterInUserAnswers] == currentLetter && userAnswerArrayInLetters[indexOfCurrentLetterInUserAnswers] != undefined) {
+                correctIndexForCurrentLetter = correctAnswerArrayInLetters.indexOf(userAnswerArrayInLetters[indexOfCurrentLetterInUserAnswers])
                 correctAnswerArrayInLetters.splice(correctIndexForCurrentLetter, 1, "1")
-                comparisonArray.push( {index: i, letterIs: userAnswerArrayInLetters[i], correctIndex: correctIndexForCurrentLetter, letterIsCorrect: true});
+                comparisonArray.push( {index: indexOfCurrentLetterInUserAnswers, letterIs: currentLetter, correctIndex: correctIndexForCurrentLetter, letterIsCorrect: true});
                 userAnswerArrayInLetters.splice(indexOfCurrentLetterInUserAnswers, 1, "1");
                 currentLetterCounter++;
                 correctLettersCounter++;
@@ -551,11 +551,13 @@ function submitAnswerHard() {
                 currentLetterCounter++;
                 i--;
             }
-            else if (userAnswerArrayInLetters[i] != currentLetter && userAnswerArrayInLetters[i] != "1" && userAnswerArrayInLetters[i] != undefined) {
+        }
+
+        for (i = 0; i <= userAnswerArrayInLetters.length; i++) {
+            if (userAnswerArrayInLetters[i] != 1) {
                 lettersToRemoveArray.splice(i, 0, {index: i, letterShouldBe: null, letterIsCorrect: false})
                 incorrectLetters++;
             }
-            
         }
         /*let mostlyCorrect = correctAnswerArrayInLetters.length * 0.6;
         let tooManyIncorrectLetters = correctLettersCounter;
@@ -568,10 +570,7 @@ function submitAnswerHard() {
 
         userWantsHints = localStorage.getItem('hints');
         
-        if (comparisonArray.length < correctAnswerArrayInLetters.length) {
-            showHint = false;
-        } 
-        else if (userWantsHints == "yes") {
+        if (userWantsHints == "yes") {
             showHint = true;
         }
 
