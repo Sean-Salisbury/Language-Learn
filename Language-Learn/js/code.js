@@ -1,3 +1,7 @@
+/**********************************************************************************************************************************************************
+This is for Both
+***********************************************************************************************************************************************************/
+
 //STORED FRONTEND
 
 var progressBarAmount = 0
@@ -14,6 +18,11 @@ var currentCourseHardMode = {};
 var correctAnswerArrayInLetters = [];
 var userAnswerArrayInLetters = [];
 var comparisonArray = [];
+var lettersToRemoveArray = [];
+var userAnswerWithColouredMistakes = "";
+var userIsViewingWhyAnswerIncorrect = false;
+var showHint = false;
+var userWantsHints = false;
 
 //temporary to make github work
 
@@ -62,6 +71,122 @@ function hasLoadedPage() {
     questionType();
 }
 
+document.addEventListener("keypress", function(event) {
+    if (userIsViewingWhyAnswerIncorrect == false) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            if ($('#nextButton').is(":visible") == true) {
+                $('#nextButton').click();
+            }
+            else if ($('#submitButton').is(":visible")) {
+                $('#submitButton').click();
+            }
+        }
+    }
+})
+
+function questionType() {
+
+    $('#enterToContinue').hide();
+    $('.questionAnswerCheck').text("");
+    $('#submitButton').show();
+    $('#nextButton').hide();
+    $('#popupbox').hide();
+
+    //Determining the difficulty
+
+    if (difficulty == "Normal") {
+        
+        //Determining what the question type is
+
+        courseNumber = localStorage.getItem('courseNumber') -1;
+        questionNumber = questionNumberGlobal - 1;
+        let currentCourse = courses[courseNumber];
+        currentQuestion = currentCourse[questionNumber];
+        questionNumberGlobal++;
+
+        normalMode(); 
+    }
+    else {
+
+        //Determining what the question type is
+
+        courseNumber = localStorage.getItem('courseNumber') -1;
+        questionNumber = questionNumberGlobal - 1;
+        let currentCourse = currentCourseHardMode;
+        currentQuestion = currentCourse[questionNumber];
+        questionNumberGlobal++;
+
+        hardMode();
+    }
+
+    
+}
+
+// The submit button
+
+function submitAnswer() {
+
+    if (difficulty == "Hard") {
+        submitAnswerHard();
+    }
+    else {
+        submitAnswerNormal();
+    }
+
+    
+}
+
+
+
+
+
+// The next course button
+
+function nextCourse(courseNumber, difficulty, hints) {
+    localStorage.setItem("difficulty" , difficulty)
+    localStorage.setItem("courseNumber" ,courseNumber)
+    localStorage.setItem("hints" , hints)
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/index.html") {
+        location.href = '/Language-Learn/html/courses.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    }
+    
+}
+
+function tryAgainFunction() {
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
+        location.href = '/Language-Learn/html/courses.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/html/courses.html';
+    }
+};
+
+function backToMenuFunction() {
+    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
+        location.href = '/Language-Learn/index.html'
+    }
+    else {
+        location.href = '/Language-Learn/Language-Learn/index.html';
+    }
+};
+
+function moveInputCadetToEnd (divElementID) {
+    const divElement = document.getElementById(divElementID);
+    // Create a new Range object and set the start and end positions to the end of the div's content.
+    const range = document.createRange();
+    range.selectNodeContents(divElement);
+    range.collapse(false); // Collapse the range to the end.
+
+    // Get the selection and add the range to it.
+    const selection = window.getSelection();
+    selection.removeAllRanges(); // Clear any existing selection.
+    selection.addRange(range);
+}
+
 /**********************************************************************************************************************************************************
 This is all for Normal Mode
 ***********************************************************************************************************************************************************/
@@ -104,10 +229,6 @@ SELECT CORRECT MEANING QUESTIONS SELECT CORRECT MEANING QUESTIONS SELECT CORRECT
 ***********************************************************************************************************************************************************/
 
 function selectTheCorrectMeaning() {
-    $('.questionAnswerCheck').text("");
-    $('#submitButton').show();
-    $('#nextButton').hide();
-    $('#popupbox').hide();
     console.log("selectTheCorrectMeaning Loaded");
     
 
@@ -148,10 +269,6 @@ FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTIONS FILL IN THE BLANK QUESTI
 ***********************************************************************************************************************************************************/
 
 function fillInTheBlank() {
-    $('.questionAnswerCheck').text("");
-    $('#submitButton').show();
-    $('#nextButton').hide();
-    $('#popupbox').hide();
     console.log("fillInTheBlank Loaded");
     
 
@@ -189,10 +306,6 @@ function fillInTheBlank() {
 }
 
 function writeThisInEnglish() {
-    $('.questionAnswerCheck').text("");
-    $('#submitButton').show();
-    $('#nextButton').hide();
-    $('#popupbox').hide();
     console.log("writeThisInEnglish Loaded");
     
 
@@ -370,7 +483,7 @@ function hardMode() {
     $('.questionAnswerCheck').text("");
     $('#submitButton').show();
     $('#nextButton').hide();
-    $('#userAnswer').val("")
+    $('#userAnswer').text("")
     $('#popupbox').hide();
     console.log("hardMode Loaded");
 
@@ -381,21 +494,18 @@ function hardMode() {
     $(".questionSubject").text(currentQuestion.questionSubject);
 }
 
-document.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        if ($('#nextButton').is(":visible") == true) {
-            $('#nextButton').click();
-        }
-        else if ($('#submitButton').is(":visible")) {
-            $('#submitButton').click();
-        }
-    }
-})
-
 function submitAnswerHard() {
-    userAnswer = $('#userAnswer').val().toLowerCase();
+
+    userAnswerArrayInLetters = [];
+    correctAnswerArrayInLetters = [];
+    allComparisonArrays = [];
+    comparisonArray = [];
+    lettersToRemoveArray = [];
+    showHint = false;
+
+    userAnswer = $('#userAnswer').text().toLowerCase();
     console.log(userAnswer);
+    
 
     let correctAnswerHardMode = currentQuestion.correctAnswer.toLowerCase();
 
@@ -414,17 +524,114 @@ function submitAnswerHard() {
     if (userAnswer != correctAnswerHardMode) {
         console.log("It wrong");
 
-        let currentLetterCorrectIndex = null;
-        let userAnswerReplaced = userAnswer;
-        for (i = 0; i < correctAnswerHardMode.length; i++) {
-            currentLetterCorrectIndex = userAnswerReplaced.indexOf(correctAnswerArrayInLetters[i])
-            comparisonArray.push(currentLetterCorrectIndex);
-            userAnswerReplaced = userAnswerReplaced.replace(correctAnswerArrayInLetters[i], "1");
-            console.log(userAnswerReplaced)
+        //Finding the correct letter indexes in the UserAnswer
+        let noLetterCounter = 0;
+        let currentLetterCounter = 0;
+        let correctLettersCounter = 0;
+        let incorrectLetters = 0;
+
+        for (i = 0; i <= userAnswerArrayInLetters.length; i++) {
+            currentLetter = correctAnswerArrayInLetters[currentLetterCounter];
+            indexOfCurrentLetterInUserAnswers = userAnswerArrayInLetters.indexOf(currentLetter);
+            if (currentLetter == undefined) {
+                //comparisonArray.push({index: i, letterShouldBe: null})
+                indexOfCurrentLetterInUserAnswers = null;
+            }
+            // When the answer is correct
+            else if (userAnswerArrayInLetters[i] == currentLetter && userAnswerArrayInLetters[i] != undefined) {
+                correctIndexForCurrentLetter = correctAnswerArrayInLetters.indexOf(userAnswerArrayInLetters[i])
+                correctAnswerArrayInLetters.splice(correctIndexForCurrentLetter, 1, "1")
+                comparisonArray.push( {index: i, letterIs: userAnswerArrayInLetters[i], correctIndex: correctIndexForCurrentLetter, letterIsCorrect: true});
+                userAnswerArrayInLetters.splice(indexOfCurrentLetterInUserAnswers, 1, "1");
+                currentLetterCounter++;
+                correctLettersCounter++;
+            }
+            if (indexOfCurrentLetterInUserAnswers == "-1") {
+                comparisonArray.push(indexOfCurrentLetterInUserAnswers);
+                currentLetterCounter++;
+                i--;
+            }
+            else if (userAnswerArrayInLetters[i] != currentLetter && userAnswerArrayInLetters[i] != "1" && userAnswerArrayInLetters[i] != undefined) {
+                lettersToRemoveArray.splice(i, 0, {index: i, letterShouldBe: null, letterIsCorrect: false})
+                incorrectLetters++;
+            }
+            
+        }
+        /*let mostlyCorrect = correctAnswerArrayInLetters.length * 0.6;
+        let tooManyIncorrectLetters = correctLettersCounter;
+        if (correctLettersCounter >= mostlyCorrect && tooManyIncorrectLetters >= incorrectLetters) {
+            showHint = true;
+        }
+        else {
+            showHint = false;
+        }*/
+
+        userWantsHints = localStorage.getItem('hints');
+        
+        if (comparisonArray.length < correctAnswerArrayInLetters.length) {
+            showHint = false;
+        } 
+        else if (userWantsHints == "yes") {
+            showHint = true;
         }
 
-        console.log(comparisonArray);
+        correctLettersCounter = 0;
+
+        console.log(lettersToRemoveArray);
+        let correctAnswersCounter = 0
+        for (i = 0; i <= comparisonArray.length; i++) {  
+            //if the correct letter is not in the array
+            if (comparisonArray[i] == -1) {
+                comparisonArray[i] = noLetterFound = {index: null, letterShouldBe: null, letterIsCorrect: false};
+                //if its the first item in the array
+                if (comparisonArray[i-1] == undefined){
+                    comparisonArray[i].index = 0;
+                    comparisonArray[i].letterShouldBe = correctAnswerArrayInLetters[correctAnswersCounter];
+                    correctAnswersCounter++;
+                }
+                else {
+
+                    //if the last item was an object
+                    if (typeof comparisonArray[i-1] == "object") {
+                        console.log("No Letter");
+                        comparisonArray[i] = noLetterFound = {index: (comparisonArray[i-1].index) + 1, letterShouldBe: correctAnswerArrayInLetters[correctAnswersCounter], letterIsCorrect: false};
+                    }
+                    else {
+                        comparisonArray[i] = noLetterFound = {index: (comparisonArray[i-1]) + 1, letterShouldBe: correctAnswerArrayInLetters[correctAnswersCounter], letterIsCorrect: false};
+                    }
+                    correctAnswersCounter++
+                }
+                noLetterCounter++;
+            }
+            else {
+                correctAnswersCounter++;
+            }
+        }
         
+        
+        console.log(comparisonArray);
+        let counter = 0;
+        userAnswerWithColouredMistakes = "";
+        userAnswerLettersThatShouldNotBeThere = "";
+        for (i = 0; i < lettersToRemoveArray.length; i++) {
+            comparisonArray.splice(lettersToRemoveArray[i].index, 0, lettersToRemoveArray[i])
+        }
+        console.log(comparisonArray);
+
+        for (i = 0; i < comparisonArray.length; i++) {
+            if (comparisonArray[i].letterIsCorrect == true) {
+                userAnswerWithColouredMistakes += '<span style="background-color: green;">' + userAnswer.charAt(comparisonArray[i].index) + '</span>'
+            } 
+            else if (comparisonArray[i].letterShouldBe == null) {
+                userAnswerLettersThatShouldNotBeThere += '<span style="background-color: red;">' + userAnswer.charAt(comparisonArray[i].index) + '</span>';
+            }
+            else if (comparisonArray[i].letterShouldBe != null) {
+                userAnswerWithColouredMistakes += '<span style="background-color: red;">' + "_" + '</span>';
+                counter++
+            }
+        }
+        userAnswerWithColouredMistakes = userAnswerWithColouredMistakes + userAnswerLettersThatShouldNotBeThere;
+        console.log(userAnswerWithColouredMistakes);
     }
 
 
@@ -437,12 +644,38 @@ function submitAnswerHard() {
     else {
         $(".questionAnswerCheck").text("Wrong");
         wrongAnswers.course1 ++; 
+        userIsViewingWhyAnswerIncorrect = true;
+        if (showHint == true) {
+            $('#userAnswer').html(userAnswerWithColouredMistakes);
+        }
+        else {
+            $('#userAnswer').html(userAnswer);
+        }
+        $('#enterToContinue').show();
+        document.addEventListener("keypress", function userAnswerChanged(event) {
+            if (event.key == "Enter") {
+                document.removeEventListener ("keypress", userAnswerChanged);
+                event.preventDefault();
+                $('#userAnswer').html("");
+                $('#enterToContinue').hide();
+                userIsViewingWhyAnswerIncorrect = false;
+            }
+            else {
+                document.addEventListener("input", function userAnswerChanged() {
+                    if (showHint == true) {
+                        $('#userAnswer').html(userAnswerWithColouredMistakes);
+                    }
+                    else {
+                        $('#userAnswer').html(userAnswer);
+                    }
+                    document.removeEventListener ("input", userAnswerChanged);
+                })
+            }
+            //$('#userAnswer').text(event.key);
+            //moveInputCadetToEnd("userAnswer");
+            
+        })
     }
-    
-    userAnswerArrayInLetters = [];
-    correctAnswerArrayInLetters = [];
-    allComparisonArrays = [];
-    comparisonArray = [];
 }
 
 
@@ -464,90 +697,4 @@ function correctAnswerHard() {
         + wrongAnswers[currentCourse] + " Incorrect Answers.");
     }
 }
-
-/**********************************************************************************************************************************************************
-This is for Both
-***********************************************************************************************************************************************************/
-
-function questionType() {
-
-    //Determining the difficulty
-
-    if (difficulty == "Normal") {
-        
-        //Determining what the question type is
-
-        courseNumber = localStorage.getItem('courseNumber') -1;
-        questionNumber = questionNumberGlobal - 1;
-        let currentCourse = courses[courseNumber];
-        currentQuestion = currentCourse[questionNumber];
-        questionNumberGlobal++;
-
-        normalMode(); 
-    }
-    else {
-
-        //Determining what the question type is
-
-        courseNumber = localStorage.getItem('courseNumber') -1;
-        questionNumber = questionNumberGlobal - 1;
-        let currentCourse = currentCourseHardMode;
-        currentQuestion = currentCourse[questionNumber];
-        questionNumberGlobal++;
-
-        hardMode();
-    }
-
     
-}
-
-// The submit button
-
-function submitAnswer() {
-
-    if (difficulty == "Hard") {
-        submitAnswerHard();
-    }
-    else {
-        submitAnswerNormal();
-    }
-
-    
-}
-
-
-
-
-
-// The next course button
-
-function nextCourse(courseNumber, difficulty) {
-    localStorage.setItem("difficulty" , difficulty)
-    localStorage.setItem("courseNumber" ,courseNumber)
-    if (currentURL == "http://127.0.0.1:5500/Language-Learn/index.html") {
-        location.href = '/Language-Learn/html/courses.html'
-    }
-    else {
-        location.href = '/Language-Learn/Language-Learn/html/courses.html';
-    }
-    
-}
-
-function tryAgainFunction() {
-    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
-        location.href = '/Language-Learn/html/courses.html'
-    }
-    else {
-        location.href = '/Language-Learn/Language-Learn/html/courses.html';
-    }
-};
-
-function backToMenuFunction() {
-    if (currentURL == "http://127.0.0.1:5500/Language-Learn/html/courses.html") {
-        location.href = '/Language-Learn/index.html'
-    }
-    else {
-        location.href = '/Language-Learn/Language-Learn/index.html';
-    }
-};
-

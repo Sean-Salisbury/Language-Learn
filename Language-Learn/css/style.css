@@ -35,17 +35,22 @@ a {
     margin-top: 3%;
 }
 
-.dropdown-menu {
+.courseButtonsDropdownMenu {
     background-color: #0d9dcd;
-    width: 200px;
+    width: 350px;
     height: 200px;
     padding:10px;
-    text-align: center;
 }
 
 .dropdown-item-text {
+    text-align: center;
     color:white;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
+}
+
+.dropdown-menu .btn-primary {
+    width:40%;
+    margin-bottom: 5%;
 }
 
 .questionUserAnswerContainer .btn-primary {
@@ -76,12 +81,6 @@ a {
 
 .questionAnswerCheck {
     line-height: 100px;
-}
-
-.dropdown-menu .btn-primary {
-    width:50%;
-    margin-bottom: 10%;
-    text-align: center;
 }
 
 .btn-secondary {

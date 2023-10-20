@@ -63,17 +63,27 @@
                             <div class="col-lg-4 courseColumns">
                                 
                                 <div class="dropdown-center">
-                                    <a class="btn btn-secondary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="btn btn-secondary" id="course1" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                                         <i class="bi bi-egg"></i>
                                     </a>
                       
                         
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu courseButtonsDropdownMenu" aria-labelledby="course1">
                                         <li><span class="dropdown-item-text">Describe your family</span></li>
                                         <li><button class="btn btn-primary" onclick="nextCourse(1, 'Normal')">Normal</li> 
-                                        <li><button class="btn btn-primary" onclick="nextCourse(1, 'Hard')">Hard</li>
+                                        <li>
+                                            <div class="dropend">
+                                                <button class="btn btn-primary dropdown-toggle" type="button" id="hintsDropdown" data-bs-toggle="dropdown" aria-expanded="false">Hard</button>
+                                                
+                                                <ul class="dropdown-menu dropdownSmall" aria-labelledby="hintsDropdown">  
+                                                    <li><a class="dropdown-item" onclick="nextCourse(1, 'Hard', 'yes')">With Hints</a></li>
+                                                    <li><a class="dropdown-item" onclick="nextCourse(1, 'Hard', 'no')">Without Hints</a></li>
+                                                </ul> 
+                                            </div>
+                                        </li>  
                                     </ul>
                                 </div>
+                                
 
                             </div>
                             <div class="col-lg-4 courseColumns"></div>
